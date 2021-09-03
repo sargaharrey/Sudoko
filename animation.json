@@ -1,0 +1,43 @@
+{
+  "anchorPoint": "MIDDLECENTER",
+  "keyframes": {
+    "fillColor": [
+      {
+        "id": "3f4faa65-8633-436e-985a-f0664db00d3b",
+        "ms": 0,
+        "property": "fillColor",
+        "value": [
+          0.6784313725490196,
+          0.027450980392156862,
+          0.027450980392156862,
+          1
+        ],
+        "easing": "linear",
+        "easingCurve": [
+          0.42,
+          0,
+          0.58,
+          1
+        ]
+      },
+      {
+        "id": "33f95808-eade-43af-8f6d-5b6470c7c01b",
+        "ms": 100,
+        "property": "fillColor",
+        "value": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "easing": "linear",
+        "easingCurve": [
+          0.42,
+          0,
+          0.58,
+          1
+        ]
+      }
+    ]
+  }
+}
