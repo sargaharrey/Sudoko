@@ -6,9 +6,13 @@ import { StyleSheet, Text, View,ScrollView, TouchableOpacity,Animated,Alert } fr
 import _ from 'lodash';
 import LottieView from 'lottie-react-native';
 const customData = require('./level0.json');
+// const sudoku = require('./sudoku.js').sudoku
+// const Puzzle = require('./main.js')
 
     
  const Board = () => {
+  //  let puzzle = sudoku.generate('easy')
+
 const showAlert = () =>
   Alert.alert(
     "Alert Title",
@@ -32,9 +36,9 @@ const showAlert = () =>
  const fadeAnim = useRef(new Animated.Value(1)).current  
 
   
-let data = customData.Puzzle
+let [data,setData]= useState(customData.Puzzle)
 let dataSolution = customData.Solution
- let [values,setValues] = useState([{cellValue:'',row:'',column:''}])
+ let [values,setValues] = useState([{value:'',row:'',column:'',status:''}])
  
 let grid = []
  
@@ -65,36 +69,10 @@ useEffect(() => {
  }
 
 grid = createGrid()
+console.log(grid)
 let [gridState,setGridState] = useState(grid)
-    
-  let duplicateFunction = ()=>{
-    let gridValues =[]
-     gridState.forEach(i => i.forEach( p => gridValues.push(p.value)))
-
-    for(let i =0;i<9;i++){
-      for(let j =0;j<9;j++){
-        if(i !== j&& values.value === gridState[i][j].value){
-          
-           gridState[i][j].duplicate = true
-          
-        }
-        else{
-          gridState[i][j].duplicate = false
-        }
-        
-      }
-    }
-         
-  }
-
-duplicateFunction()
-
-
- const duplicateStyle = cell => {
-    return (cell.duplicate) ? { color: 'rgb(255, 116, 102)' } : {};
-  };
- 
- const onSelect = (cell) => {
+console.log(gridState)
+     const onSelect = (cell) => {
   
 let checker = false
     if(checker === false){
@@ -108,15 +86,36 @@ let checker = false
     
   }
 
- const selectTextStyle =(colIdx,gridIdx) =>{
-   return (
-      values !== null &&
-      values.row === gridIdx && 
-      values.column === colIdx &&
-      values.status === true)   ?
-        { color: '#fff247' } : {};
   
- }
+ let duplicateFunction = ()=>{
+    let gridValues =[]
+     gridState.map(i => i.map( p => gridValues.push(p.value)))
+
+    for(let i =0;i<9;i++){
+      for(let j =0;j<9;j++){
+        if( values.value=== gridState[i][j].value){
+          
+           gridState[i][j].duplicate = true
+          
+        }
+        else{
+                     gridState[i][j].duplicate = false
+
+        }
+       
+        
+      }
+    }
+         
+  }
+
+
+duplicateFunction()
+
+ const duplicateStyle = cell => {
+    return (cell.duplicate) ? { color: '#fff247' } : {};
+  };
+ 
 
  const selectViewStyle =(colIdx,gridIdx) =>{
    return (
@@ -128,16 +127,16 @@ let checker = false
   
  }
 
- 
+
 const editCell = (value)=>{
- 
-  setValues({...values,value:value})
+setValues({...values,value:value})
  let grid = _.cloneDeep(gridState);
 grid[values.row][values.column].value = value
 
   setGridState(grid)
   
 }
+console.log(gridState)
 
 const checkErorr =( cell)=>{
    return(
@@ -149,10 +148,10 @@ const checkErorr =( cell)=>{
     
 
 const endGame = ()=>{
-  console.log(dataSolution.flat(2))
+  
     let arr = []
 arr.push(gridState.map((i,x) => i.map(o => o.value)))
-  console.log(arr)
+ 
   return (
  JSON.stringify(arr[0]) === JSON.stringify(dataSolution)  ? alert("game is ended") : ''
   )
@@ -160,18 +159,23 @@ arr.push(gridState.map((i,x) => i.map(o => o.value)))
 }
 endGame()
 
-// console.log(values[0].row)
+const resetGame  = ()=>{
+setGridState(grid)
 
+}
+console.log(gridState)
 
  const renderText = (cell)=> {
 
      
         return(
-       <Text style={[{color:'white',fontSize:32},selectTextStyle(cell.col,cell.grid),duplicateStyle(cell)]}>{cell.value === 'None'?'':cell.value }</Text>
+       <Text style={[{color:'white',fontSize:32},duplicateStyle(cell)]}>{cell.value === 'None'?'':cell.value }</Text>
       
         )
     
   }
+
+
 
 const renderCell = (cell)=>{
   
@@ -221,7 +225,7 @@ const renderCell = (cell)=>{
     <View style={styles.container}>
      
      {gridState.map( grids => 
-      //  <View style={styles.container2}>
+     
          
           <View style={styles.container2}> 
          {renderGrids(grids)}
@@ -230,11 +234,12 @@ const renderCell = (cell)=>{
       
       )}
   
-  {console.log(gridState)}
+
    <View >
        {[1,2,3,4,5,6,7,8,9].map(i => 
          <TouchableOpacity onPressIn={() => editCell(i)}><Text>{i}</Text></TouchableOpacity> 
         )}
+        <TouchableOpacity onPressIn={resetGame}><Text>reset</Text></TouchableOpacity>
    </View>
  </View>
 
